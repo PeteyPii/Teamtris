@@ -1,0 +1,19 @@
+{
+  "name": "teamtris",
+  "version": "1.0.0",
+  "description": "Mutliplayer Tetris game",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PeteyPii/Teamtris.git"
+  },
+  "author": "Patrick Wrobel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PeteyPii/Teamtris/issues"
+  },
+  "homepage": "https://github.com/PeteyPii/Teamtris#readme",
+  "dependencies": {
+    "express": "4.13.3",
+    "socket.io": "1.3.7"
+  }
+}
