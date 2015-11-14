@@ -1,120 +1,114 @@
-var game = new Phaser.Game(40*32, 704, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var ctx = null;
 
-var cursors;
-var socket;
-var grid;
+var blockImage = new Image();
+blockImage.src = '/assets/block.png';
 
-function preload() {
-    game.load.image('block', 'assets/block.png');
+var socket = io();
 
-    socket = io();
-    var self = this;
-    socket.on('board', function(game_state) {
-        self.game.board = game_state['board'];
-        var score = game_state['score'];
-        update();
-    });
-    socket.on('message', function(data) {
-        console.log(data);
-    });
+socket.on('update', function(data) {
+    var board = data.board;
 
-    var style = { font: "32px Arial", fill: "#BF5FFF", wordWrap: true, wordWrapWidth: 200, align: "center" };
-    text = game.add.text(33*32, 0, "TeamTris", style);
-}
-
-function create() {
-    this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
-
-	cursors = game.input.keyboard.createCursorKeys();
-	cursors.left.onDown.add(function() {
-		socket.emit('keyDown', 'left');
-	});
-	cursors.left.onUp.add(function() {
-		socket.emit('keyUp', 'left');
-	});
-
-	cursors.right.onDown.add(function() {
-		socket.emit('keyDown', 'right');
-	});
-	cursors.right.onUp.add(function() {
-		socket.emit('keyUp', 'right');
-	});
-
-	cursors.down.onDown.add(function() {
-		socket.emit('keyDown', 'down');
-	});
-	cursors.down.onUp.add(function() {
-		socket.emit('keyUp', 'down');
-	});
-
-    cursors.up.onDown.add(function() {
-        socket.emit('keyDown', 'up');
-    });
-    cursors.up.onUp.add(function() {
-        socket.emit('keyUp', 'up');
-    });
-
-    space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    space.onDown.add(function() {
-        socket.emit('keyDown', 'space');
-    });
-    space.onUp.add(function() {
-        socket.emit('keyUp', 'space');
-    });
-
-    grid = [];
-    for (var i = 0; i < 30; i++) {
-        grid.push([]);
-        for (var j = 0; j < 22; j++) {
-            var block = new Block(game, i * 32, j * 32);
-            grid[i].push(block);
-        }
-    }
-}
-
-function update() {
-    drawLine();
-    if (this.game.board) {
-        for (var x = 0; x < this.game.board.width; x++) {
-            for (var y = 0; y < this.game.board.height; y++) {
-                if (this.game.board.grid[x][y] > 0) {
-                    grid[x][y].show(this.game.board.grid[x][y]);
-                } else {
-                    grid[x][y].hide();
-                }
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    var c;
+    for (var x = 0; x < board.grid.length; x++) {
+        for (var y = 0; y < board.grid[x].length; y++) {
+            c = board.grid[x][y];
+            if (c > 0) {
+                ctx.fillStyle = '#' + c.toString(16);
+                ctx.fillRect(x * 32, y * 32, 32, 32);
             }
         }
     }
+
+    ctx.globalCompositeOperation = 'multiply';
+    for (var x = 0; x < board.grid.length; x++) {
+        for (var y = 0; y < board.grid[x].length; y++) {
+            c = board.grid[x][y];
+            if (c > 0) {
+                ctx.drawImage(blockImage, x * 32, y * 32);
+            }
+        }
+    }
+    ctx.globalCompositeOperation = 'normal';
+});
+
+socket.on('message', function(data) {
+    console.log(data);
+});
+
+socket.on('init', function(data) {
+    ctx = document.getElementById('game').getContext('2d');
+
+    ctx.canvas.width = 32 * data.width;
+    ctx.canvas.height = 32 * data.height;
+});
+
+var ENTER_CODE = 13;
+var SPACE_CODE = 32;
+var LEFT_CODE = 37;
+var UP_CODE = 38;
+var RIGHT_CODE = 39;
+var DOWN_CODE = 40;
+
+var inputs = {};
+inputs[ENTER_CODE] = false;
+inputs[SPACE_CODE] = false;
+inputs[LEFT_CODE] = false;
+inputs[UP_CODE] = false;
+inputs[RIGHT_CODE] = false;
+inputs[DOWN_CODE] = false;
+
+window.onkeydown = function(e) {
+    if (inputs[e.which]) {
+        return;
+    }
+
+    switch (e.which) {
+        case SPACE_CODE:
+            inputs[e.which] = true;
+            socket.emit('keyDown', 'space');
+            break;
+        case LEFT_CODE:
+            inputs[e.which] = true;
+            socket.emit('keyDown', 'left');
+            break;
+        case UP_CODE:
+            inputs[e.which] = true;
+            socket.emit('keyDown', 'up');
+            break;
+        case RIGHT_CODE:
+            inputs[e.which] = true;
+            socket.emit('keyDown', 'right');
+            break;
+        case DOWN_CODE:
+            inputs[e.which] = true;
+            socket.emit('keyDown', 'down');
+            break;
+    }
 }
 
-function drawLine()
-{
-    bmd = game.add.bitmapData(10*32,704);
-    var color = 'white';
-
-    // bmd.ctx.beginPath();
-    // bmd.ctx.lineWidth = "4";
-    // bmd.ctx.strokeStyle = color;
-    // bmd.ctx.stroke();
-      bmd.ctx.beginPath();
-  bmd.ctx.moveTo(0, 0);
-  bmd.ctx.lineTo(0 , 704);
-  bmd.ctx.lineWidth = 4;
-    bmd.ctx.strokeStyle = color;
-
-  bmd.ctx.stroke();
-
-    sprite = game.add.sprite(30*32, 0, bmd);
-
-
-  // // bmd.clear();
-  // bmd.ctx.beginPath();
-  // bmd.ctx.moveTo(30*32, 0);
-  // bmd.ctx.lineTo(30*32 , 704);
-  // bmd.ctx.lineWidth = 4;
-  // bmd.ctx.stroke();
-  // bmd.render();
-
-
+window.onkeyup = function(e) {
+    switch (e.which) {
+        case SPACE_CODE:
+            inputs[e.which] = false;
+            socket.emit('keyUp', 'space');
+            break;
+        case LEFT_CODE:
+            inputs[e.which] = false;
+            socket.emit('keyUp', 'left');
+            break;
+        case UP_CODE:
+            inputs[e.which] = false;
+            socket.emit('keyUp', 'up');
+            break;
+        case RIGHT_CODE:
+            inputs[e.which] = false;
+            socket.emit('keyUp', 'right');
+            break;
+        case DOWN_CODE:
+            inputs[e.which] = false;
+            socket.emit('keyUp', 'down');
+            break;
+    }
 }
-
