@@ -3,6 +3,16 @@ var ctx = null;
 var blockImage = new Image();
 blockImage.src = '/assets/block.png';
 
+var BLOCK_SIZE = 32;
+
+function getHexColour(c) {
+    var s = c.toString(16);
+    while (s.length < 6) {
+        s = '0' + s;
+    }
+    return '#' + s;
+}
+
 var socket = io();
 
 socket.on('update', function(data) {
@@ -15,8 +25,8 @@ socket.on('update', function(data) {
         for (var y = 0; y < board.grid[x].length; y++) {
             c = board.grid[x][y];
             if (c > 0) {
-                ctx.fillStyle = '#' + c.toString(16);
-                ctx.fillRect(x * 32, y * 32, 32, 32);
+                ctx.fillStyle = getHexColour(c);
+                ctx.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
             }
         }
     }
@@ -26,7 +36,7 @@ socket.on('update', function(data) {
         for (var y = 0; y < board.grid[x].length; y++) {
             c = board.grid[x][y];
             if (c > 0) {
-                ctx.drawImage(blockImage, x * 32, y * 32);
+                ctx.drawImage(blockImage, x * BLOCK_SIZE, y * BLOCK_SIZE);
             }
         }
     }
@@ -40,8 +50,8 @@ socket.on('message', function(data) {
 socket.on('init', function(data) {
     ctx = document.getElementById('game').getContext('2d');
 
-    ctx.canvas.width = 32 * data.width;
-    ctx.canvas.height = 32 * data.height;
+    ctx.canvas.width = BLOCK_SIZE * data.width;
+    ctx.canvas.height = BLOCK_SIZE * data.height;
 });
 
 var ENTER_CODE = 13;
