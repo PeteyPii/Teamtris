@@ -1,4 +1,6 @@
 var ctx = null;
+var numBlocksX;
+var numBlocksY;
 
 var blockImage = new Image();
 blockImage.src = '/assets/block.png';
@@ -41,6 +43,17 @@ socket.on('update', function(data) {
         }
     }
     ctx.globalCompositeOperation = 'normal';
+
+    ctx.beginPath();
+    ctx.moveTo(BLOCK_SIZE * numBlocksX + 2.5, 0);
+    ctx.lineTo(BLOCK_SIZE * numBlocksX + 2.5, BLOCK_SIZE * numBlocksY);
+    ctx.strokeStyle = 'white';
+    ctx.lineWidth = 4;
+    ctx.stroke();
+
+    ctx.font = '32px Arial';
+    ctx.fillStyle = 'white';
+    ctx.fillText('SCORE: ' + data.score, BLOCK_SIZE * numBlocksX + 24, 50);
 });
 
 socket.on('message', function(data) {
@@ -50,8 +63,11 @@ socket.on('message', function(data) {
 socket.on('init', function(data) {
     ctx = document.getElementById('game').getContext('2d');
 
-    ctx.canvas.width = BLOCK_SIZE * data.width;
-    ctx.canvas.height = BLOCK_SIZE * data.height;
+    numBlocksX = data.width;
+    numBlocksY = data.height;
+
+    ctx.canvas.width = BLOCK_SIZE * numBlocksX + 300;
+    ctx.canvas.height = BLOCK_SIZE * numBlocksY;
 });
 
 var ENTER_CODE = 13;
