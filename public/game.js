@@ -1,11 +1,13 @@
 var ctx = null;
 var numBlocksX;
 var numBlocksY;
+var paneX;
 
 var blockImage = new Image();
 blockImage.src = '/assets/block.png';
 
 var BLOCK_SIZE = 32;
+var SIDE_PANE_WIDTH = 300;
 
 function getHexColour(c) {
     var s = c.toString(16);
@@ -54,6 +56,18 @@ socket.on('update', function(data) {
     ctx.font = '32px Arial';
     ctx.fillStyle = 'white';
     ctx.fillText('SCORE: ' + data.score, BLOCK_SIZE * numBlocksX + 24, 50);
+
+    ctx.fillStyle = 'white';
+    var squares = data.nextPiece;
+    for (var i = 0; i < squares.length; i++) {
+        ctx.fillRect(paneX + 120 + BLOCK_SIZE * squares[i][0], 150 + BLOCK_SIZE * squares[i][1], BLOCK_SIZE, BLOCK_SIZE);
+    }
+
+    ctx.globalCompositeOperation = 'multiply';
+    for (var i = 0; i < squares.length; i++) {
+        ctx.drawImage(blockImage, paneX + 120 + BLOCK_SIZE * squares[i][0], 150 + BLOCK_SIZE * squares[i][1]);
+    }
+    ctx.globalCompositeOperation = 'normal';
 });
 
 socket.on('message', function(data) {
@@ -65,8 +79,9 @@ socket.on('init', function(data) {
 
     numBlocksX = data.width;
     numBlocksY = data.height;
+    paneX = BLOCK_SIZE * numBlocksX;
 
-    ctx.canvas.width = BLOCK_SIZE * numBlocksX + 300;
+    ctx.canvas.width = BLOCK_SIZE * numBlocksX + SIDE_PANE_WIDTH;
     ctx.canvas.height = BLOCK_SIZE * numBlocksY;
 });
 
