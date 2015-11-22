@@ -4,7 +4,7 @@ var numBlocksY;
 var paneX;
 
 var blockImage = new Image();
-blockImage.src = '/assets/block.png';
+blockImage.src = 'assets/block.png';
 
 var BLOCK_SIZE = 32;
 var SIDE_PANE_WIDTH = 300;
