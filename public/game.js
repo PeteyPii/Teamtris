@@ -57,8 +57,10 @@ socket.on('update', function(data) {
     ctx.stroke();
 
     ctx.font = '32px Arial';
+    ctx.textAlign = 'left';
     ctx.fillStyle = 'white';
-    ctx.fillText('SCORE: ' + data.score, BLOCK_SIZE * numBlocksX + 24, 50);
+    ctx.textBaseline = 'hanging';
+    ctx.fillText('Score: ' + data.score, paneX + 8, 2);
 
     var squares = data.nextPiece;
     for (var i = 0; i < squares.length; i++) {
@@ -74,10 +76,11 @@ socket.on('update', function(data) {
     ctx.textAlign = 'right';
     ctx.textBaseline = 'alphabetic';
 
-    ctx.fillText(version, screenWidth, screenHeight);
+    ctx.fillText(version, screenWidth, screenHeight - 2);
 
     ctx.textAlign = 'left';
-    ctx.textBaseline = 'hanging';
+    ctx.fillText('Inspired by', paneX + 8, screenHeight - 34);
+    ctx.fillText('teamtris.net', paneX + 8, screenHeight - 2);
 });
 
 socket.on('message', function(data) {
