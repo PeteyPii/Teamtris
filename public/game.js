@@ -1,7 +1,10 @@
 var ctx = null;
 var numBlocksX;
 var numBlocksY;
+var screenWidth;
+var screenHeight;
 var paneX;
+var version;
 
 var blockImage = new Image();
 blockImage.src = 'assets/block.png';
@@ -57,7 +60,6 @@ socket.on('update', function(data) {
     ctx.fillStyle = 'white';
     ctx.fillText('SCORE: ' + data.score, BLOCK_SIZE * numBlocksX + 24, 50);
 
-    ctx.fillStyle = 'white';
     var squares = data.nextPiece;
     for (var i = 0; i < squares.length; i++) {
         ctx.fillRect(paneX + 120 + BLOCK_SIZE * squares[i][0], 150 + BLOCK_SIZE * squares[i][1], BLOCK_SIZE, BLOCK_SIZE);
@@ -68,6 +70,14 @@ socket.on('update', function(data) {
         ctx.drawImage(blockImage, paneX + 120 + BLOCK_SIZE * squares[i][0], 150 + BLOCK_SIZE * squares[i][1]);
     }
     ctx.globalCompositeOperation = 'normal';
+
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'alphabetic';
+
+    ctx.fillText(version, screenWidth, screenHeight);
+
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'hanging';
 });
 
 socket.on('message', function(data) {
@@ -77,12 +87,15 @@ socket.on('message', function(data) {
 socket.on('init', function(data) {
     ctx = document.getElementById('game').getContext('2d');
 
+    version = data.version;
     numBlocksX = data.width;
     numBlocksY = data.height;
+    screenWidth = BLOCK_SIZE * numBlocksX + SIDE_PANE_WIDTH;
+    screenHeight = BLOCK_SIZE * numBlocksY;
     paneX = BLOCK_SIZE * numBlocksX;
 
-    ctx.canvas.width = BLOCK_SIZE * numBlocksX + SIDE_PANE_WIDTH;
-    ctx.canvas.height = BLOCK_SIZE * numBlocksY;
+    ctx.canvas.width = screenWidth;
+    ctx.canvas.height = screenHeight;
 });
 
 var ENTER_CODE = 13;
