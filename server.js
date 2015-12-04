@@ -8,6 +8,13 @@ var settings = require('./lib/settings.js');
 
 try {
     var app = express();
+
+    // Log every request
+    app.use(function logRequests(req, res, next) {
+        logger.logRequest(req);
+        next();
+    });
+
     httpServer = http.createServer(app);
     app.get('/', function(req, res) {
         res.redirect('/Teamtris');
