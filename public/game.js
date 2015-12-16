@@ -79,6 +79,11 @@ socket.on('update', function(data) {
     ctx.fillText(version, screenWidth, screenHeight - 2);
 
     ctx.textAlign = 'left';
+    ctx.fillText('Made by:', paneX + 8, screenHeight - 194);
+    ctx.fillText('Patrick W.', paneX + 8, screenHeight - 162);
+    ctx.fillText('Rahin J.', paneX + 8, screenHeight - 130);
+    ctx.fillText('Jonathan T.', paneX + 8, screenHeight - 98);
+
     ctx.fillText('Inspired by', paneX + 8, screenHeight - 34);
     ctx.fillText('teamtris.net', paneX + 8, screenHeight - 2);
 });
