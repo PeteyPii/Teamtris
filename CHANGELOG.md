@@ -1,4 +1,7 @@
 # Changelog
+## v0.1.2
+- Fixed bug where game would not reset when all players had left
+
 ## v0.1.1
 - Show verion number in the game
 - Added non-configurable Google Analytics
