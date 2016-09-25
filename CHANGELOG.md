@@ -1,4 +1,7 @@
 # Changelog
+## v0.1.3
+- Fixed a minor typo in the server log
+
 ## v0.1.2
 - Fixed bug where game would not reset when all players had left
 
