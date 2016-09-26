@@ -17,9 +17,9 @@ try {
 
     httpServer = http.createServer(app);
     app.get('/', function(req, res) {
-        res.redirect('/Teamtris');
+        res.redirect('/teamtris');
     });
-    app.use('/Teamtris', teamtrisApp(httpServer));
+    app.use('/teamtris', teamtrisApp(httpServer));
 
     httpServer.listen(settings.server_port, function() {
         var host = httpServer.address().address;

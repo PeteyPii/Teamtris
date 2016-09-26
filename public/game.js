@@ -20,7 +20,7 @@ function getHexColour(c) {
     return '#' + s;
 }
 
-var socket = io();
+var socket = io({ path: '/teamtris/socket.io/' });
 
 socket.on('update', function(data) {
     var board = data.board;
