@@ -1,4 +1,9 @@
 # Changelog
+## v0.1.4
+- Changed base path of socket.io requests to be under teamtris
+- Changed URL to be lowercase (ie /teamtris/...)
+- Updated project dependencies
+
 ## v0.1.3
 - Fixed a minor typo in the server log
 
