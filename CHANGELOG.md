@@ -1,4 +1,7 @@
 # Changelog
+## v0.1.5
+- Fixed canvas drawing bug
+
 ## v0.1.4
 - Changed base path of socket.io requests to be under teamtris
 - Changed URL to be lowercase (ie /teamtris/...)
