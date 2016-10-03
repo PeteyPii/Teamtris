@@ -47,7 +47,7 @@ socket.on('update', function(data) {
             }
         }
     }
-    ctx.globalCompositeOperation = 'normal';
+    ctx.globalCompositeOperation = 'source-over';
 
     ctx.beginPath();
     ctx.moveTo(BLOCK_SIZE * numBlocksX + 2.5, 0);
@@ -71,7 +71,7 @@ socket.on('update', function(data) {
     for (var i = 0; i < squares.length; i++) {
         ctx.drawImage(blockImage, paneX + 120 + BLOCK_SIZE * squares[i][0], 150 + BLOCK_SIZE * squares[i][1]);
     }
-    ctx.globalCompositeOperation = 'normal';
+    ctx.globalCompositeOperation = 'source-over';
 
     ctx.textAlign = 'right';
     ctx.textBaseline = 'alphabetic';
