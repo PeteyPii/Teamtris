@@ -13,8 +13,8 @@
   },
   "homepage": "https://github.com/PeteyPii/Teamtris#readme",
   "dependencies": {
-    "express": "4.14.0",
-    "lodash": "4.16.1",
-    "socket.io": "1.4.8"
+    "express": "4.22.0",
+    "lodash": "4.17.23",
+    "socket.io": "2.5.0"
   }
 }
